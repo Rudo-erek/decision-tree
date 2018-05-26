@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+
 from decisionTree import DecisionTree
+from decisionTreeC45 import DecisionTreeC45
+from decisionTreeCART import DecisionTreeCART
 
 
 class PlotTree:
@@ -79,7 +82,7 @@ class PlotTree:
         PlotTree.plotTree.yOff = 1.0
         # self.plotNode(inTree.feature, (0.5, 1.0), (0.5, 1.0), self.decisionNode)
         self.plotTree(inTree, (0.5, 1.0), MidText='')
-        plt.savefig('data/tree.png')
+        plt.savefig('out/images/watermelon_CART-3.png')
         plt.show()
 
 # 西瓜书训练数据
@@ -93,6 +96,16 @@ Y_data = train_data['Survived']
 X_data = train_data.drop('Survived', axis=1)
 
 # ID3算法
-tree = DecisionTree(X_data, Y_data).root_node
+# tree = DecisionTree(X_data, Y_data).root_node
+# pt = PlotTree()
+# pt.createPlot(tree)
+
+# C4.5算法
+# tree = DecisionTreeC45(X_data, Y_data).root_node
+# pt = PlotTree()
+# pt.createPlot(tree)
+
+# CART算法
+tree = DecisionTreeCART(X_data, Y_data).root_node
 pt = PlotTree()
 pt.createPlot(tree)

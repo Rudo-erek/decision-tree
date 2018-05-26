@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 
-class DecisionTree:
+class DecisionTreeCART:
 
     def __init__(self, X, Y):
         self.X_train = X
@@ -25,73 +25,97 @@ class DecisionTree:
         Y_data = tree_node.Y_data
         # get all features of the data set
         features = list(X_data.columns)
+
         # 如果Y_data中的实例属于同一类，则置为单结点，并将该类作为该结点的类
         if len(list(Y_data.value_counts())) == 1:
             tree_node.category = Y_data.iloc[0]
             tree_node.children = None
             return
+
         # 如果特征集为空，则置为单结点，并将Y_data中最大的类作为该结点的类
         elif len(features) == 0:
             tree_node.category = Y_data.value_counts(ascending=False).keys()[0]
             tree_node.children = None
             return
-        # 否则，计算各特征的信息增益，选择信息增益最大的特征
+
+        # 否则，计算各特征的基尼指数，选择基尼指数最小的特征
         else:
-            ent_d = self.compute_entropy(Y_data)
+            # gini_d = self.compute_gini(Y_data)
             XY_data = pd.concat([X_data, Y_data], axis=1)
             d_nums = XY_data.shape[0]
-            max_gain_ratio = 0
+            min_gini_index = 1
             feature = None
+            feature_value = None
 
             for i in range(len(features)):
-                v = self.features.get(features[i])
-                Ga = ent_d
+                # 当前特征有哪些取值
+                # v = self.features.get(features[i])
+                v = XY_data[features[i]].value_counts().keys()
+                # 当前特征的取值只有一种
+                if len(v) <= 1:
+                    continue
+                # 当前特征的每一个取值分为是和不是两类
                 for j in v:
+                    Gini_index = 0
                     dv = XY_data[XY_data[features[i]] == j]
                     dv_nums = dv.shape[0]
-                    ent_dv = self.compute_entropy(dv[dv.columns[-1]])
-                    Ga -= dv_nums/d_nums*ent_dv
+                    dv_not = XY_data[XY_data[features[i]] != j]
+                    dv_not_nums = dv_not.shape[0]
+                    gini_dv = self.compute_gini(dv[dv.columns[-1]])
+                    gini_dv_not = self.compute_gini(dv_not[dv_not.columns[-1]])
+                    if d_nums == 0:
+                        continue
+                    Gini_index += dv_nums / d_nums * gini_dv + dv_not_nums / d_nums * gini_dv_not
 
-                if Ga > max_gain_ratio:
-                    max_gain_ratio = Ga
-                    feature = features[i]
+                    if Gini_index < min_gini_index:
+                        min_gini_index = Gini_index
+                        feature = features[i]
+                        feature_value = j
 
-            # 信息增益低于阈值0
             if feature is None:
                 tree_node.category = Y_data.value_counts(ascending=False).keys()[0]
                 tree_node.children = None
                 return
             tree_node.feature = feature
 
+            # 否则，对当前特征的最小基尼指数取值，将Y_data分成两类子集，构建子结点
             # get all kinds of values of the current partition feature
-            branches = self.features.get(feature)
+            # branches = list({feature_value, "!"+str(feature_value)})
             # branches = list(XY_data[feature].value_counts().keys())
             tree_node.children = dict()
-            for i in range(len(branches)):
-                X_data = XY_data[XY_data[feature] == branches[i]]
+            for i in range(2):
+                # 左分支，左分支为是的分支
+                if i == 0:
+                    X_data = XY_data[XY_data[feature] == feature_value]
+                    X_data.drop(feature, axis=1, inplace=True)
+                    child_name = feature_value
+                # 右分支，右分支为否的分支
+                else:
+                    X_data = XY_data[XY_data[feature] != feature_value]
+                    child_name = "!" + str(feature_value)
                 if len(X_data) == 0:
                     category = XY_data[XY_data.columns[-1]].value_counts(ascending=False).keys()[0]
                     childNode = TreeNode(tree_node, None, None, category, None, None)
-                    tree_node.children[branches[i]] = childNode
+                    tree_node.children[child_name] = childNode
                     # return
                     # error, not should return, but continue
                     continue
 
                 Y_data = X_data[X_data.columns[-1]]
                 X_data.drop(X_data.columns[-1], axis=1, inplace=True)
-                X_data.drop(feature, axis=1, inplace=True)
+                # X_data.drop(feature, axis=1, inplace=True)
                 childNode = TreeNode(tree_node, None, None, None, X_data, Y_data)
-                tree_node.children[branches[i]] = childNode
+                tree_node.children[child_name] = childNode
                 # print("feature: " + str(tree_node.feature) + " branch: " + str(branches[i]) + "\n")
                 self.tree_generate(childNode)
 
             return
 
-    def compute_entropy(self, Y):
-        ent = 0;
+    def compute_gini(self, Y):
+        gini = 1;
         for cate in Y.value_counts(1):
-            ent -= cate*np.log2(cate);
-        return ent
+            gini -= cate*cate;
+        return gini
 
 
 
