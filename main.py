@@ -155,7 +155,7 @@ if __name__ == '__main__':
     # print(count)
     # print(count/len(Y_data))
     # 做预测
-    Y_test = pd.read_csv(r'E:\learn\Machine_Learning_course\paper&code\decision_tree\data\test_dealt.csv')
-    test_decision_treeCART(Y_test, tree)
-    Y_test = Y_test[['PassengerId', 'Survived']]
-    Y_test.to_csv(r'E:\learn\Machine_Learning_course\paper&code\decision_tree\out\data\test_dealt_out_CART_modi.csv', index=False)
+    # Y_test = pd.read_csv(r'E:\learn\Machine_Learning_course\paper&code\decision_tree\data\test_dealt.csv')
+    # test_decision_treeCART(Y_test, tree)
+    # Y_test = Y_test[['PassengerId', 'Survived']]
+    # Y_test.to_csv(r'E:\learn\Machine_Learning_course\paper&code\decision_tree\out\data\test_dealt_out_CART_modi.csv', index=False)

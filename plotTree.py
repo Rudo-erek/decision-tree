@@ -82,7 +82,7 @@ class PlotTree:
         PlotTree.plotTree.yOff = 1.0
         # self.plotNode(inTree.feature, (0.5, 1.0), (0.5, 1.0), self.decisionNode)
         self.plotTree(inTree, (0.5, 1.0), MidText='')
-        plt.savefig('out/images/watermelon_CART-3.png')
+        plt.savefig('out/images/Titanic_CART_Cut.png')
         plt.show()
 
 # 西瓜书训练数据
@@ -91,9 +91,9 @@ class PlotTree:
 # Y_data = train_data['haogua']
 
 # Titanic训练数据
-train_data = pd.read_csv('data/train_dealt.csv')
-Y_data = train_data['Survived']
-X_data = train_data.drop('Survived', axis=1)
+# train_data = pd.read_csv('data/train_dealt.csv')
+# Y_data = train_data['Survived']
+# X_data = train_data.drop('Survived', axis=1)
 
 # ID3算法
 # tree = DecisionTree(X_data, Y_data).root_node
@@ -106,6 +106,6 @@ X_data = train_data.drop('Survived', axis=1)
 # pt.createPlot(tree)
 
 # CART算法
-tree = DecisionTreeCART(X_data, Y_data).root_node
-pt = PlotTree()
-pt.createPlot(tree)
+# tree = DecisionTreeCART(X_data, Y_data).root_node
+# pt = PlotTree()
+# pt.createPlot(tree)

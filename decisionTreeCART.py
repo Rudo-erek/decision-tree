@@ -93,13 +93,15 @@ class DecisionTreeCART:
                 else:
                     X_data = XY_data[XY_data[feature] != feature_value]
                     child_name = "!" + str(feature_value)
-                if len(X_data) == 0:
-                    category = XY_data[XY_data.columns[-1]].value_counts(ascending=False).keys()[0]
-                    childNode = TreeNode(tree_node, None, None, category, None, None)
-                    tree_node.children[child_name] = childNode
-                    # return
-                    # error, not should return, but continue
-                    continue
+                # 可能出现节点没有数据的情况吗？
+                # if len(X_data) == 0:
+                #     print("I'm a bug")
+                #     category = XY_data[XY_data.columns[-1]].value_counts(ascending=False).keys()[0]
+                #     childNode = TreeNode(tree_node, None, None, category, None, None)
+                #     tree_node.children[child_name] = childNode
+                #     # return
+                #     # error, not should return, but continue
+                #     continue
 
                 Y_data = X_data[X_data.columns[-1]]
                 X_data.drop(X_data.columns[-1], axis=1, inplace=True)
@@ -112,9 +114,9 @@ class DecisionTreeCART:
             return
 
     def compute_gini(self, Y):
-        gini = 1;
+        gini = 1
         for cate in Y.value_counts(1):
-            gini -= cate*cate;
+            gini -= cate*cate
         return gini
 
 
