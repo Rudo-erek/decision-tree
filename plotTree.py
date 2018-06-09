@@ -82,7 +82,7 @@ class PlotTree:
         PlotTree.plotTree.yOff = 1.0
         # self.plotNode(inTree.feature, (0.5, 1.0), (0.5, 1.0), self.decisionNode)
         self.plotTree(inTree, (0.5, 1.0), MidText='')
-        plt.savefig('out/images/Titanic_CART_Cut.png')
+        plt.savefig('out/images/Titanic_CART_Cut_3.png')
         plt.show()
 
 # 西瓜书训练数据

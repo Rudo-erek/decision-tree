@@ -6,6 +6,8 @@ import pandas as pd
 
 import random as rnd
 
+import time
+
 import traceback
 
 def inorder_traversal(treeNode):
@@ -81,6 +83,8 @@ if __name__ == '__main__':
     Y_data = train_data['Survived']
     X_data = train_data.drop('Survived', axis=1)
 
+    # 计算运行时间
+    start = time.clock()
     # ID3算法
     # tree = DecisionTree(X_data, Y_data).root_node
     # 计算回归值
@@ -159,3 +163,7 @@ if __name__ == '__main__':
     # test_decision_treeCART(Y_test, tree)
     # Y_test = Y_test[['PassengerId', 'Survived']]
     # Y_test.to_csv(r'E:\learn\Machine_Learning_course\paper&code\decision_tree\out\data\test_dealt_out_CART_modi.csv', index=False)
+
+    # 算法结束
+    elapsed = (time.clock() - start)
+    print("Time used:", elapsed)

@@ -1,4 +1,5 @@
 import pandas as pd
+import time
 
 from copy import deepcopy
 
@@ -48,6 +49,9 @@ train_data_2 = pd.read_csv('data/CV-3/train_dealt_2.csv')
 train_data = pd.concat([train_data_1, train_data_2], axis=0)
 Y_data = train_data['Survived']
 X_data = train_data.drop('Survived', axis=1)
+
+# 计算运行时间
+start = time.clock()
 
 tree = DecisionTreeCART(X_data, Y_data).root_node
 
@@ -120,25 +124,27 @@ for T in child_tree_list:
     for i in range(len(Y_data)):
         if Y_data.loc[i] == Y_data_predict.loc[i]:
             count += 1
-    with open("out/text/Titanic_CART_Cut.txt", "a") as f:
-        f.write("\n-----------------------------------------------------------------------\n")
-        f.write("相同个数: %d    总个数: %d\n" % (count, len(Y_data)))
-        f.write("回归值: %f\n" % (count/len(Y_data)))
-        f.write("-----------------------------------------------------------------------")
-    f.close()
-    print(count)
-    print(count/len(Y_data))
-    if count/len(Y_data) > best_good_value:
+    # with open("out/text/Titanic_CART_Cut.txt", "a") as f:
+    #     f.write("\n-----------------------------------------------------------------------\n")
+    #     f.write("相同个数: %d    总个数: %d\n" % (count, len(Y_data)))
+    #     f.write("回归值: %f\n" % (count/len(Y_data)))
+    #     f.write("-----------------------------------------------------------------------")
+    # f.close()
+    # print(count)
+    # print(count/len(Y_data))
+    if count/len(Y_data) >= best_good_value:
         best_tree = T
         best_good_value = count/len(Y_data)
+
+# 运行结束
+elapsed = (time.clock() - start)
+print("Time used:", elapsed)
 # 做预测
-Y_test = pd.read_csv(r'E:\learn\Machine_Learning_course\paper&code\decision_tree\data\test_dealt.csv')
-test_decision_treeCART(Y_test, best_tree)
-Y_test = Y_test[['PassengerId', 'Survived']]
-Y_test.to_csv(r'E:\learn\Machine_Learning_course\paper&code\decision_tree\out\data\test_dealt_out_CART_Cut.csv', index=False)
-
-
-pt = PlotTree()
-pt.createPlot(best_tree)
-
-
+# Y_test = pd.read_csv(r'E:\learn\Machine_Learning_course\paper&code\decision_tree\data\test_dealt.csv')
+# test_decision_treeCART(Y_test, best_tree)
+# Y_test = Y_test[['PassengerId', 'Survived']]
+# Y_test.to_csv(r'E:\learn\Machine_Learning_course\paper&code\decision_tree\out\data\test_dealt_out_CART_Cut_1.csv', index=False)
+#
+#
+# pt = PlotTree()
+# pt.createPlot(best_tree)
